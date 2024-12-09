@@ -206,16 +206,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Black Cream Illustration Kitchen Logo %281%29.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\menu_icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\menu_icon1.png" />
+    <None Include="Resources\profile.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\profile.png" />
+    <None Include="Resources\logoFood.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

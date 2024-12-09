@@ -162,13 +162,13 @@ namespace QLNH
 
                 if (cmd.ExecuteNonQuery() > 0)
                 {
-                    MessageBox.Show($"Sửa Nhân Viên thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show($"Sửa Bàn thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     txtMaBan.Clear();
                     txtSoBan.Clear();
                     cbbTrangThai.SelectedIndex = 0;
                     txtSoBan.Focus();
                 }
-                else MessageBox.Show("Sửa Nhân Viên không thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                else MessageBox.Show("Sửa Bàn không thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 conn.Close();
             }
             catch (Exception ex)
@@ -177,28 +177,7 @@ namespace QLNH
             }
             dgvBan.DataSource = LoadBanAll();
         }
-
-        private void btnTimKiem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand("sp_TimBan", conn);
-                cmd.CommandText = "sp_TimBan";
-                cmd.CommandType = CommandType.StoredProcedure;
-                SqlParameter paMaB = new SqlParameter("@tk", txtTimKiem.Text);
-                cmd.Parameters.Add(paMaB);
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-                dgvBan.DataSource = dt;                
-                conn.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi kết nối: {ex.Message}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
+        
         private void check_number(object sender, CancelEventArgs e)
         {
             if (!int.TryParse(txtSoBan.Text, out _) && txtSoBan.Text != "") 
@@ -211,7 +190,35 @@ namespace QLNH
                 errorProvider1.SetError(txtSoBan, ""); 
             }
         }
-        
+
+        private void txtTimKiem_TextChanged(object sender, EventArgs e)
+        {
+            if(txtTimKiem.Text != "")
+            {
+                try
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("sp_TimBan", conn);
+                    cmd.CommandText = "sp_TimBan";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    SqlParameter paMaB = new SqlParameter("@tk", txtTimKiem.Text);
+                    cmd.Parameters.Add(paMaB);
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    dgvBan.DataSource = dt;
+                    conn.Close();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Lỗi kết nối: {ex.Message}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                dgvBan.DataSource = LoadBanAll();
+            }            
+        }
     }
 
 }

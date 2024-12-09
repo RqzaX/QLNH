@@ -113,14 +113,10 @@ namespace QLNH
                         SqlCommand cmd = new SqlCommand("sp_ThemDatBan", conn);
                         cmd.CommandType = CommandType.StoredProcedure;
 
-                        // Thêm các tham số đầu vào
                         cmd.Parameters.AddWithValue("@TEN_KH", txtTenKH.Text);
                         cmd.Parameters.AddWithValue("@MA_BAN", maBan);
                         cmd.Parameters.AddWithValue("@NGAY_DAT", thoigian);
                         cmd.Parameters.AddWithValue("@TRANG_THAI", "Đã xác nhận");
-
-                        // Thực thi và lấy mã đặt bàn vừa thêm
-                        object result = cmd.ExecuteScalar();
 
                         MessageBox.Show($"Đặt bàn thành công!",
                                         "Thông báo",

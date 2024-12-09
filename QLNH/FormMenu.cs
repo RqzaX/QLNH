@@ -178,87 +178,87 @@ namespace QLNH
             }
             return dt;
         }
-        private void LuuHoaDon(int maBan, string trangThai, DataGridView dgvGioHang)
-        {
-            try
-            {
-                // Mở kết nối đến cơ sở dữ liệu
-                conn.Open();
+        //private void LuuHoaDon(int maBan, string trangThai, DataGridView dgvGioHang)
+        //{
+        //    try
+        //    {
+        //        // Mở kết nối đến cơ sở dữ liệu
+        //        conn.Open();
 
-                // Kiểm tra xem MA_BAN có tồn tại trong bảng BAN
-                string checkQuery = "SELECT COUNT(*) FROM BAN WHERE MA_BAN = @MA_BAN";
-                using (SqlCommand checkCmd = new SqlCommand(checkQuery, conn))
-                {
-                    checkCmd.Parameters.AddWithValue("@MA_BAN", maBan);
-                    int count = (int)checkCmd.ExecuteScalar();
+        //        // Kiểm tra xem MA_BAN có tồn tại trong bảng BAN
+        //        string checkQuery = "SELECT COUNT(*) FROM BAN WHERE MA_BAN = @MA_BAN";
+        //        using (SqlCommand checkCmd = new SqlCommand(checkQuery, conn))
+        //        {
+        //            checkCmd.Parameters.AddWithValue("@MA_BAN", maBan);
+        //            int count = (int)checkCmd.ExecuteScalar();
 
-                    if (count == 0)
-                    {
-                        MessageBox.Show("Mã bàn không tồn tại trong bảng BAN.");
-                        return; // Dừng quá trình nếu MA_BAN không hợp lệ
-                    }
-                }
+        //            if (count == 0)
+        //            {
+        //                MessageBox.Show("Mã bàn không tồn tại trong bảng BAN.");
+        //                return; // Dừng quá trình nếu MA_BAN không hợp lệ
+        //            }
+        //        }
 
-                // Tạo JSON từ DataGridView (giỏ hàng)
-                var chiTietList = new List<dynamic>();
-                decimal tongTien = 0;  // Biến lưu tổng tiền
+        //        // Tạo JSON từ DataGridView (giỏ hàng)
+        //        var chiTietList = new List<dynamic>();
+        //        decimal tongTien = 0;  // Biến lưu tổng tiền
 
-                foreach (DataGridViewRow row in dgvGioHang.Rows)
-                {
-                    // Kiểm tra nếu giá trị mã món và số lượng có hợp lệ
-                    if (row.Cells["MA_MON"].Value != null && row.Cells["SO_LUONG"].Value != null && row.Cells["GIA"].Value != null)
-                    {
-                        int maMon = Convert.ToInt32(row.Cells["MA_MON"].Value); // Mã món ẩn
-                        int soLuong = Convert.ToInt32(row.Cells["SO_LUONG"].Value);
-                        decimal gia = Convert.ToDecimal(row.Cells["GIA"].Value);
-                        decimal thanhTien = gia * soLuong;
+        //        foreach (DataGridViewRow row in dgvGioHang.Rows)
+        //        {
+        //            // Kiểm tra nếu giá trị mã món và số lượng có hợp lệ
+        //            if (row.Cells["MA_MON"].Value != null && row.Cells["SO_LUONG"].Value != null && row.Cells["GIA"].Value != null)
+        //            {
+        //                int maMon = Convert.ToInt32(row.Cells["MA_MON"].Value); // Mã món ẩn
+        //                int soLuong = Convert.ToInt32(row.Cells["SO_LUONG"].Value);
+        //                decimal gia = Convert.ToDecimal(row.Cells["GIA"].Value);
+        //                decimal thanhTien = gia * soLuong;
 
-                        // Thêm chi tiết vào danh sách chi tiết hóa đơn
-                        chiTietList.Add(new
-                        {
-                            MA_MON = maMon,
-                            SO_LUONG = soLuong,
-                            THANH_TIEN = thanhTien
-                        });
+        //                // Thêm chi tiết vào danh sách chi tiết hóa đơn
+        //                chiTietList.Add(new
+        //                {
+        //                    MA_MON = maMon,
+        //                    SO_LUONG = soLuong,
+        //                    THANH_TIEN = thanhTien
+        //                });
 
-                        // Cộng dồn tổng tiền
-                        tongTien += thanhTien;
-                    }
-                }
+        //                // Cộng dồn tổng tiền
+        //                tongTien += thanhTien;
+        //            }
+        //        }
 
-                // Chuyển đổi danh sách chi tiết thành chuỗi JSON
-                string jsonChiTietHoaDon = JsonConvert.SerializeObject(chiTietList);
+        //        // Chuyển đổi danh sách chi tiết thành chuỗi JSON
+        //        string jsonChiTietHoaDon = JsonConvert.SerializeObject(chiTietList);
 
-                // Gọi Stored Procedure để lưu hóa đơn
-                using (SqlCommand cmd = new SqlCommand("sp_LuuHoaDon", conn))
-                {
-                    DateTime currentDate = DateTime.Now;
-                    string ngayLapHD = currentDate.ToString("dd/MM/yyyy HH:mm:ss");
+        //        // Gọi Stored Procedure để lưu hóa đơn
+        //        using (SqlCommand cmd = new SqlCommand("sp_LuuHoaDon", conn))
+        //        {
+        //            DateTime currentDate = DateTime.Now;
+        //            string ngayLapHD = currentDate.ToString("dd/MM/yyyy HH:mm:ss");
 
-                    cmd.CommandType = CommandType.StoredProcedure;
+        //            cmd.CommandType = CommandType.StoredProcedure;
 
-                    // Thêm tham số cho stored procedure
-                    cmd.Parameters.AddWithValue("@MA_BAN", maBan);
-                    cmd.Parameters.AddWithValue("@NGAY_LAP", ngayLapHD);
-                    cmd.Parameters.AddWithValue("@TONG_TIEN", tongTien);  // Sử dụng tổng tiền đã tính toán
-                    cmd.Parameters.AddWithValue("@TRANG_THAI", trangThai);
-                    cmd.Parameters.AddWithValue("@ChiTietHoaDon", jsonChiTietHoaDon);  // Chuỗi JSON chứa chi tiết hóa đơn
+        //            // Thêm tham số cho stored procedure
+        //            cmd.Parameters.AddWithValue("@MA_BAN", maBan);
+        //            cmd.Parameters.AddWithValue("@NGAY_LAP", ngayLapHD);
+        //            cmd.Parameters.AddWithValue("@TONG_TIEN", tongTien);  // Sử dụng tổng tiền đã tính toán
+        //            cmd.Parameters.AddWithValue("@TRANG_THAI", trangThai);
+        //            cmd.Parameters.AddWithValue("@ChiTietHoaDon", jsonChiTietHoaDon);  // Chuỗi JSON chứa chi tiết hóa đơn
 
-                    // Thực thi stored procedure
-                    cmd.ExecuteNonQuery();
-                }
+        //            // Thực thi stored procedure
+        //            cmd.ExecuteNonQuery();
+        //        }
 
-                MessageBox.Show("Hóa đơn đã được lưu thành công!");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi kết nối: {ex.Message}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                conn.Close();
-            }
-        }
+        //        MessageBox.Show("Hóa đơn đã được lưu thành công!");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show($"Lỗi kết nối: {ex.Message}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //    }
+        //    finally
+        //    {
+        //        conn.Close();
+        //    }
+        //}
 
         private void btnDatDon_Click(object sender, EventArgs e)
         {
@@ -289,10 +289,6 @@ namespace QLNH
                         DataGridView dgv = dgvGioHang;
                         FormXacThucDon formXacThuc = new FormXacThucDon(soMon , maBan, tongTien, dgv);
                         formXacThuc.ShowDialog();
-                        //// Gọi hàm lưu hóa đơn
-                        //LuuHoaDon(maBan, trangThai, dgvGioHang);
-
-                        //// Làm mới giỏ hàng
                         //dgvGioHang.Rows.Clear();
                     }
 

@@ -36,8 +36,10 @@
             this.label2 = new System.Windows.Forms.Label();
             this.btnDangNhap = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             groupBox1 = new System.Windows.Forms.GroupBox();
             groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -134,11 +136,23 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "QUẢN LÝ NHÀ HÀNG";
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::QLNH.Properties.Resources.logoFood;
+            this.pictureBox1.Location = new System.Drawing.Point(12, 77);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(455, 360);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 2;
+            this.pictureBox1.TabStop = false;
+            // 
             // FormLogin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(902, 456);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(groupBox1);
             this.Controls.Add(this.label1);
             this.Name = "FormLogin";
@@ -147,6 +161,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormLogin_FormClosing);
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -161,6 +176,7 @@
         private System.Windows.Forms.TextBox txtMatKhau;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox cbHienThiMatKhau;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
 

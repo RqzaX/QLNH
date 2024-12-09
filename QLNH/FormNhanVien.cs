@@ -127,6 +127,7 @@ namespace QLNH
             {
                 MessageBox.Show($"Lỗi kết nối: {ex.Message}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            dgvNhanVien.DataSource = LoadNhanVien();
         }
 
         private void btnXoa_Click(object sender, EventArgs e)
@@ -158,6 +159,7 @@ namespace QLNH
             {
                 MessageBox.Show($"Lỗi kết nối: {ex.Message}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            dgvNhanVien.DataSource = LoadNhanVien();
         }
 
         private void btnSua_Click(object sender, EventArgs e)
@@ -196,33 +198,37 @@ namespace QLNH
             {
                 MessageBox.Show($"Lỗi kết nối: {ex.Message}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void btnLamMoi_Click(object sender, EventArgs e)
-        {
             dgvNhanVien.DataSource = LoadNhanVien();
         }
-
-        private void btnTimKiem_Click(object sender, EventArgs e)
+              
+        private void txtTimKiem_TextChanged(object sender, EventArgs e)
         {
-            try
+            if(txtTimKiem.Text != "")
             {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand("sp_TimNhanVien", conn);
-                cmd.CommandText = "sp_TimNhanVien";
-                cmd.CommandType = CommandType.StoredProcedure;
-                SqlParameter paMaNV = new SqlParameter("@tennv", txtTimKiem.Text);                                                
-                cmd.Parameters.Add(paMaNV);
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-                dgvNhanVien.DataSource = dt;                                                 
-                conn.Close();
+                try
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("sp_TimNhanVien", conn);
+                    cmd.CommandText = "sp_TimNhanVien";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    SqlParameter paMaNV = new SqlParameter("@tennv", txtTimKiem.Text);
+                    cmd.Parameters.Add(paMaNV);
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    dgvNhanVien.DataSource = dt;
+                    conn.Close();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Lỗi kết nối: {ex.Message}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show($"Lỗi kết nối: {ex.Message}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                dgvNhanVien.DataSource = LoadNhanVien();
             }
+            
         }
     }
 }
