@@ -42,11 +42,33 @@ namespace QLNH
             }
             return null;
         }
+        public DataTable LoadDuTenDanhMuc()
+        {
+            DataTable dt = null;
+            try
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandText = "sp_LayDanhMuc";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Connection = conn;
+                dt = new DataTable();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+                conn.Close();
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi kết nối: {ex.Message}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            return null;
+        }
 
         private void Bep_Load(object sender, EventArgs e)
         {
-            cbbDanhMuc.DataSource = LoadDuLieuMenuMon();
-            cbbDanhMuc.DisplayMember = "DANH_MUC";
+            cbbDanhMuc.DataSource = LoadDuTenDanhMuc();
+            cbbDanhMuc.DisplayMember = "TENDANHMUC";
             dgvDanhSachMon.DataSource = LoadDuLieuMenuMon();
         }
 
@@ -74,6 +96,7 @@ namespace QLNH
                 if (cmd.ExecuteNonQuery() > 0)
                 {
                     MessageBox.Show($"Xóa món thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    dgvDanhSachMon.Refresh();
                     txtMaMon.Clear();
                     txtTenMon.Clear();
                     cbbDanhMuc.SelectedIndex = 0;
@@ -82,12 +105,14 @@ namespace QLNH
                     txtTenMon.Focus();
                 }
                 else MessageBox.Show("Xóa món không thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                
                 conn.Close();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Lỗi kết nối: {ex.Message}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            dgvDanhSachMon.DataSource = LoadDuLieuMenuMon();
         }
 
         private void btnThem_Click(object sender, EventArgs e)
@@ -102,7 +127,7 @@ namespace QLNH
                 cmd.Parameters.Add(paTenmon);
                 SqlParameter paDanhmuc = new SqlParameter("@danhmuc", cbbDanhMuc.Text);
                 cmd.Parameters.Add(paDanhmuc);
-                SqlParameter paGia = new SqlParameter("@gia", txtGia.Text);
+                SqlParameter paGia = new SqlParameter("@gia", Convert.ToDecimal(txtGia.Text));
                 cmd.Parameters.Add(paGia);
                 SqlParameter paTrangThai = new SqlParameter("@trangthai", cbbTrangThai.Text);
                 cmd.Parameters.Add(paTrangThai);
@@ -110,6 +135,7 @@ namespace QLNH
                 if (cmd.ExecuteNonQuery() > 0)
                 {
                     MessageBox.Show($"Thêm món thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    dgvDanhSachMon.Refresh();
                     txtMaMon.Clear();
                     txtTenMon.Clear();
                     cbbDanhMuc.SelectedIndex = 0;
@@ -124,10 +150,52 @@ namespace QLNH
             {
                 MessageBox.Show($"Lỗi kết nối: {ex.Message}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            dgvDanhSachMon.DataSource = LoadDuLieuMenuMon();
         }
 
-        private void btnLamMoi_Click(object sender, EventArgs e)
+        private void btnSua_Click(object sender, EventArgs e)
         {
+            try
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("sp_SuaMon", conn);
+                cmd.CommandText = "sp_SuaMon";
+                cmd.CommandType = CommandType.StoredProcedure;
+                SqlParameter paMamon = new SqlParameter("@mamon", txtMaMon.Text);
+                cmd.Parameters.Add(paMamon);
+                SqlParameter paTenmon = new SqlParameter("@tenmon", txtTenMon.Text);
+                cmd.Parameters.Add(paTenmon);
+                SqlParameter paDanhmuc = new SqlParameter("@danhmuc", cbbDanhMuc.Text);
+                cmd.Parameters.Add(paDanhmuc);
+                SqlParameter paGia = new SqlParameter("@gia", Convert.ToDecimal(txtGia.Text));
+                cmd.Parameters.Add(paGia);
+                if(cbbTrangThai.SelectedIndex == 1)
+                {
+                    string query = "UPDATE MON_AN SET TRANG_THAI = N'Đã hết' WHERE MA_MON = @mamon;";
+                    SqlCommand cmd1 = new SqlCommand(query, conn);
+                    cmd1.Parameters.AddWithValue("@mamon", txtMaMon.Text);
+                    cmd1.ExecuteNonQuery();
+                } else
+                {
+                    string query = "UPDATE MON_AN SET TRANG_THAI = N'Còn món' WHERE MA_MON = @mamon;";
+                    SqlCommand cmd1 = new SqlCommand(query, conn);
+                    cmd1.Parameters.AddWithValue("@mamon", txtMaMon.Text);
+                    cmd1.ExecuteNonQuery();
+                }
+
+                if (cmd.ExecuteNonQuery() > 0)
+                {
+                    MessageBox.Show($"Sửa món thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else MessageBox.Show("Sửa món không thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi kết nối: {ex.Message}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            } finally
+            {
+                conn.Close();
+            }
             dgvDanhSachMon.DataSource = LoadDuLieuMenuMon();
         }
     }

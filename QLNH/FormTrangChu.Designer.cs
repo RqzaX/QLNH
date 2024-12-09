@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnThongKe = new System.Windows.Forms.Button();
+            this.btnNhanVien = new System.Windows.Forms.Button();
+            this.btnTinhTrangBan = new System.Windows.Forms.Button();
+            this.btnBep = new System.Windows.Forms.Button();
             this.btnMenu = new System.Windows.Forms.Button();
             this.panelChinh = new System.Windows.Forms.Panel();
-            this.btnBep = new System.Windows.Forms.Button();
-            this.btnTinhTrangBan = new System.Windows.Forms.Button();
-            this.btnNhanVien = new System.Windows.Forms.Button();
-            this.btnThongKe = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -51,6 +51,70 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(244, 819);
             this.panel1.TabIndex = 0;
+            // 
+            // btnThongKe
+            // 
+            this.btnThongKe.BackColor = System.Drawing.Color.DeepSkyBlue;
+            this.btnThongKe.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnThongKe.Cursor = System.Windows.Forms.Cursors.Default;
+            this.btnThongKe.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnThongKe.ForeColor = System.Drawing.Color.White;
+            this.btnThongKe.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnThongKe.Location = new System.Drawing.Point(-8, 598);
+            this.btnThongKe.Name = "btnThongKe";
+            this.btnThongKe.Size = new System.Drawing.Size(252, 65);
+            this.btnThongKe.TabIndex = 5;
+            this.btnThongKe.Text = "Thống kê";
+            this.btnThongKe.UseVisualStyleBackColor = false;
+            this.btnThongKe.Click += new System.EventHandler(this.btnThongKe_Click);
+            // 
+            // btnNhanVien
+            // 
+            this.btnNhanVien.BackColor = System.Drawing.Color.DeepSkyBlue;
+            this.btnNhanVien.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnNhanVien.Cursor = System.Windows.Forms.Cursors.Default;
+            this.btnNhanVien.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnNhanVien.ForeColor = System.Drawing.Color.White;
+            this.btnNhanVien.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnNhanVien.Location = new System.Drawing.Point(-8, 514);
+            this.btnNhanVien.Name = "btnNhanVien";
+            this.btnNhanVien.Size = new System.Drawing.Size(252, 65);
+            this.btnNhanVien.TabIndex = 4;
+            this.btnNhanVien.Text = "Nhân Viên";
+            this.btnNhanVien.UseVisualStyleBackColor = false;
+            this.btnNhanVien.Click += new System.EventHandler(this.btnNhanVien_Click);
+            // 
+            // btnTinhTrangBan
+            // 
+            this.btnTinhTrangBan.BackColor = System.Drawing.Color.DeepSkyBlue;
+            this.btnTinhTrangBan.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnTinhTrangBan.Cursor = System.Windows.Forms.Cursors.Default;
+            this.btnTinhTrangBan.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnTinhTrangBan.ForeColor = System.Drawing.Color.White;
+            this.btnTinhTrangBan.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnTinhTrangBan.Location = new System.Drawing.Point(-8, 347);
+            this.btnTinhTrangBan.Name = "btnTinhTrangBan";
+            this.btnTinhTrangBan.Size = new System.Drawing.Size(252, 65);
+            this.btnTinhTrangBan.TabIndex = 3;
+            this.btnTinhTrangBan.Text = "Tình trạng bàn";
+            this.btnTinhTrangBan.UseVisualStyleBackColor = false;
+            this.btnTinhTrangBan.Click += new System.EventHandler(this.btnTinhTrangBan_Click);
+            // 
+            // btnBep
+            // 
+            this.btnBep.BackColor = System.Drawing.Color.DeepSkyBlue;
+            this.btnBep.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnBep.Cursor = System.Windows.Forms.Cursors.Default;
+            this.btnBep.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnBep.ForeColor = System.Drawing.Color.White;
+            this.btnBep.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnBep.Location = new System.Drawing.Point(-8, 430);
+            this.btnBep.Name = "btnBep";
+            this.btnBep.Size = new System.Drawing.Size(252, 65);
+            this.btnBep.TabIndex = 2;
+            this.btnBep.Text = "Bếp";
+            this.btnBep.UseVisualStyleBackColor = false;
+            this.btnBep.Click += new System.EventHandler(this.btnBep_Click);
             // 
             // btnMenu
             // 
@@ -74,67 +138,6 @@
             this.panelChinh.Name = "panelChinh";
             this.panelChinh.Size = new System.Drawing.Size(1075, 807);
             this.panelChinh.TabIndex = 1;
-            // 
-            // btnBep
-            // 
-            this.btnBep.BackColor = System.Drawing.Color.DeepSkyBlue;
-            this.btnBep.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnBep.Cursor = System.Windows.Forms.Cursors.Default;
-            this.btnBep.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnBep.ForeColor = System.Drawing.Color.White;
-            this.btnBep.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnBep.Location = new System.Drawing.Point(-8, 430);
-            this.btnBep.Name = "btnBep";
-            this.btnBep.Size = new System.Drawing.Size(252, 65);
-            this.btnBep.TabIndex = 2;
-            this.btnBep.Text = "Bếp";
-            this.btnBep.UseVisualStyleBackColor = false;
-            this.btnBep.Click += new System.EventHandler(this.btnBep_Click);
-            // 
-            // btnTinhTrangBan
-            // 
-            this.btnTinhTrangBan.BackColor = System.Drawing.Color.DeepSkyBlue;
-            this.btnTinhTrangBan.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnTinhTrangBan.Cursor = System.Windows.Forms.Cursors.Default;
-            this.btnTinhTrangBan.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnTinhTrangBan.ForeColor = System.Drawing.Color.White;
-            this.btnTinhTrangBan.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnTinhTrangBan.Location = new System.Drawing.Point(-8, 347);
-            this.btnTinhTrangBan.Name = "btnTinhTrangBan";
-            this.btnTinhTrangBan.Size = new System.Drawing.Size(252, 65);
-            this.btnTinhTrangBan.TabIndex = 3;
-            this.btnTinhTrangBan.Text = "Tình trạng bàn";
-            this.btnTinhTrangBan.UseVisualStyleBackColor = false;
-            // 
-            // btnNhanVien
-            // 
-            this.btnNhanVien.BackColor = System.Drawing.Color.DeepSkyBlue;
-            this.btnNhanVien.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnNhanVien.Cursor = System.Windows.Forms.Cursors.Default;
-            this.btnNhanVien.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnNhanVien.ForeColor = System.Drawing.Color.White;
-            this.btnNhanVien.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNhanVien.Location = new System.Drawing.Point(-8, 514);
-            this.btnNhanVien.Name = "btnNhanVien";
-            this.btnNhanVien.Size = new System.Drawing.Size(252, 65);
-            this.btnNhanVien.TabIndex = 4;
-            this.btnNhanVien.Text = "Nhân Viên";
-            this.btnNhanVien.UseVisualStyleBackColor = false;
-            // 
-            // btnThongKe
-            // 
-            this.btnThongKe.BackColor = System.Drawing.Color.DeepSkyBlue;
-            this.btnThongKe.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnThongKe.Cursor = System.Windows.Forms.Cursors.Default;
-            this.btnThongKe.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnThongKe.ForeColor = System.Drawing.Color.White;
-            this.btnThongKe.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnThongKe.Location = new System.Drawing.Point(-8, 598);
-            this.btnThongKe.Name = "btnThongKe";
-            this.btnThongKe.Size = new System.Drawing.Size(252, 65);
-            this.btnThongKe.TabIndex = 5;
-            this.btnThongKe.Text = "Thống kê";
-            this.btnThongKe.UseVisualStyleBackColor = false;
             // 
             // FormTrangChu
             // 

@@ -36,8 +36,25 @@ namespace QLNH
         private void btnBep_Click(object sender, EventArgs e)
         {
             Bep formBep = new Bep();
-            // Hiển thị FormMenu trong panelContainer
             LoadFormIntoPanel(formBep);
+        }
+
+        private void btnNhanVien_Click(object sender, EventArgs e)
+        {
+            FormNhanVien form = new FormNhanVien();
+            LoadFormIntoPanel(form);
+        }
+
+        private void btnTinhTrangBan_Click(object sender, EventArgs e)
+        {
+            FormDSBan form = new FormDSBan();
+            LoadFormIntoPanel(form);
+        }
+
+        private void btnThongKe_Click(object sender, EventArgs e)
+        {
+            FormThongKe form = new FormThongKe();
+            LoadFormIntoPanel(form);
         }
     }
 }
