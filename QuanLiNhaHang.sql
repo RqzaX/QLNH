@@ -21,47 +21,43 @@ CREATE TABLE BAN (
     SO_BAN INT NOT NULL,
     TRANG_THAI NVARCHAR(50) NOT NULL
 );
-
 -- 4. Tạo bảng KHACH_HANG
 CREATE TABLE KHACH_HANG (
     MA_KH INT PRIMARY KEY IDENTITY(1,1),
     TEN_KH NVARCHAR(100) NOT NULL,
     SDT NVARCHAR(20) NOT NULL,
-    EMAIL NVARCHAR(100),
     GHI_CHU NVARCHAR(255)
 );
-
 -- 5. Tạo bảng DAT_BAN
 CREATE TABLE DAT_BAN (
     MA_DAT_BAN INT PRIMARY KEY IDENTITY(1,1),
-    MA_KH INT NOT NULL,
+    TEN_KH NVARCHAR(20) NOT NULL,
     MA_BAN INT NOT NULL,
     NGAY_DAT DATETIME NOT NULL,
     TRANG_THAI NVARCHAR(50) NOT NULL,
-    FOREIGN KEY (MA_KH) REFERENCES KHACH_HANG(MA_KH),
-    FOREIGN KEY (MA_BAN) REFERENCES BAN(MA_BAN)
 );
-
+select * from DAT_BAN
 -- 6. Tạo bảng HOA_DON
 CREATE TABLE HOA_DON (
-    MA_HD INT PRIMARY KEY IDENTITY(1,1),
-    MA_BAN INT NOT NULL,
-    NGAY_LAP DATETIME NOT NULL,
-    TONG_TIEN DECIMAL(10, 2) NOT NULL,
-    TRANG_THAI NVARCHAR(50) NOT NULL,
-    FOREIGN KEY (MA_BAN) REFERENCES BAN(MA_BAN)
+    MaHoaDon INT PRIMARY KEY IDENTITY(1,1), -- Mã hóa đơn tự tăng
+    NgayLap DATE NOT NULL,                  -- Ngày lập hóa đơn
+    ThoiGian DATETIME NOT NULL,             -- Thời gian lập hóa đơn
+    SoBan INT NOT NULL,                     -- Số bàn
+    TongTien DECIMAL(18,2) NOT NULL,        -- Tổng tiền của hóa đơn
+    TrangThai NVARCHAR(50) NOT NULL,        -- Trạng thái (VD: "Phục vụ ngay", "Đã thanh toán")
+    GhiChu NVARCHAR(MAX)                    -- Ghi chú gửi đến bếp
 );
-
 -- 7. Tạo bảng CHI_TIET_HOA_DON
 CREATE TABLE CHI_TIET_HOA_DON (
-    MA_HD INT NOT NULL,
-    MA_MON INT NOT NULL,
-    SO_LUONG INT NOT NULL,
-    THANH_TIEN DECIMAL(10, 2) NOT NULL,
-    PRIMARY KEY (MA_HD, MA_MON),
-    FOREIGN KEY (MA_HD) REFERENCES HOA_DON(MA_HD),
-    FOREIGN KEY (MA_MON) REFERENCES MON_AN(MA_MON)
+    MaChiTiet INT PRIMARY KEY IDENTITY(1,1), -- Mã chi tiết hóa đơn tự tăng
+    MaHoaDon INT NOT NULL,                   -- Mã hóa đơn (khóa ngoại)
+    TenMon NVARCHAR(100) NOT NULL,           -- Tên món ăn
+    SoLuong INT NOT NULL,                    -- Số lượng món ăn
+    Gia DECIMAL(18,2) NOT NULL,              -- Giá mỗi món
+    ThanhTien AS (SoLuong * Gia),            -- Thành tiền (tính tự động)
+    FOREIGN KEY (MaHoaDon) REFERENCES HOA_DON(MaHoaDon) ON DELETE CASCADE
 );
+
 
 -- 8. Tạo bảng NHAN_VIEN
 CREATE TABLE NHAN_VIEN (
@@ -83,8 +79,6 @@ INSERT INTO MON_AN (TEN_MON, DANH_MUC, GIA, TRANG_THAI) VALUES
 (N'Bún chả', N'Món chính', 45000, N'Còn món'),
 (N'Nem rán', N'Khai vị', 35000, N'Còn món');
 
-DELETE FROM MON_AN
-WHERE TRANG_THAI = 1;
 -- Trạng thái
 -- 10. Thêm dữ liệu mẫu vào bảng BAN
 INSERT INTO BAN (SO_BAN, TRANG_THAI) VALUES
@@ -123,3 +117,161 @@ go
 create proc sp_XoaMonAn(@maMon int)
 as
 	delete from MON_AN where MA_MON = @maMon
+-- update món ăn
+CREATE PROC sp_SuaMon
+    @mamon INT,
+    @tenmon NVARCHAR(100),
+    @danhmuc NVARCHAR(50),
+    @gia DECIMAL(10,2)
+AS
+BEGIN
+    UPDATE MON_AN
+    SET TEN_MON = @tenmon,
+        DANH_MUC = @danhmuc,
+        GIA = @gia
+    WHERE MA_MON = @mamon;
+END
+
+select * from MON_AN
+drop proc sp_SuaMon
+
+-- Lấy danh sách bàn
+create proc sp_LayBan
+as 
+	select * from BAN
+
+-- Lấy danh sách bàn với chuỗi "Bàn - Trạng Thái"
+CREATE PROCEDURE sp_LayDanhSachBan
+AS
+BEGIN
+    SELECT 
+        MA_BAN,
+        CONCAT(CAST(SO_BAN AS NVARCHAR), ' - ', TRANG_THAI) AS DanhSachBan
+    FROM BAN;
+END;
+
+drop proc sp_LayDanhSachBan
+
+EXEC sp_LayDSMon;
+-- Tìm kiếm món theo tên món và mã món
+CREATE PROCEDURE sp_TimKiemMonAn
+    @Keyword NVARCHAR(100)
+AS
+BEGIN
+    -- Tìm kiếm trong bảng MonAn
+    SELECT * FROM MON_AN
+    WHERE 
+        MA_MON LIKE '%' + @Keyword + '%'  -- Tìm kiếm theo mã món
+        OR TEN_MON LIKE '%' + @Keyword + '%' -- Tìm kiếm theo tên món
+    ORDER BY 
+        TEN_MON; -- Sắp xếp kết quả theo tên món
+END;
+
+------------------ Lưu hóa đơn
+-- Tạo Stored Procedure lưu hóa đơn và chi tiết hóa đơn
+--- Kiểm tra trạng thái bàn
+CREATE PROC sp_KiemTraTrangThaiBan
+    @maBan INT
+AS
+    SELECT TRANG_THAI
+    FROM BAN
+    WHERE MA_BAN = @maBan;
+-----------------------
+drop proc sp_LaySoBan
+------- Lấy số bàn từ mã bàn
+create proc sp_LaySoBan(@maban int)
+as
+	select SO_BAN from BAN WHERE MA_BAN = @maban
+-- Thêm hóa đơn
+
+-- Thêm vào danh sách đặt bàn
+CREATE PROC sp_ThemDatBan
+    @TEN_KH NVARCHAR(20),
+    @MA_BAN INT,
+    @NGAY_DAT DATETIME,
+    @TRANG_THAI NVARCHAR(50)
+AS
+    -- Thêm dữ liệu vào bảng DAT_BAN
+    INSERT INTO DAT_BAN (TEN_KH, MA_BAN, NGAY_DAT, TRANG_THAI)
+    VALUES (@TEN_KH, @MA_BAN, @NGAY_DAT, @TRANG_THAI);
+
+drop proc sp_ThemDatBan
+
+
+
+go
+--Danh Sach Nhan Vien
+create proc sp_DSNhanVien
+as
+select * from NHAN_VIEN
+go
+--Danh Sach Quyen
+create proc sp_DSQuyen
+as
+SELECT DISTINCT PHAN_QUYEN FROM NHAN_VIEN
+go
+--Them Nhan Vien
+create proc sp_ThemNhanVien(@tennv nvarchar(50),@taikhoan varchar(50),@matkhau varchar(50),@phanquyen nvarchar(50))
+as
+insert into NHAN_VIEN(TEN_NV,TAI_KHOAN,MAT_KHAU,PHAN_QUYEN)
+values (@tennv,@taikhoan,@matkhau,@phanquyen)
+go
+--Xoa Nhan Vien
+create proc sp_XoaNhanVien(@manhanvien int)
+as
+delete from NHAN_VIEN where MA_NV = @manhanvien
+go
+--Sua Nhan Vien
+create proc sp_CapNhatNhanVien(@manhanvien int,@tennv nvarchar(50),@taikhoan varchar(50),@matkhau varchar(50),@phanquyen nvarchar(50))
+as
+update NHAN_VIEN
+set TEN_NV = @tennv,
+TAI_KHOAN = @taikhoan,
+MAT_KHAU = @matkhau,
+PHAN_QUYEN = @phanquyen
+where MA_NV = @manhanvien
+go
+--Tim Nhan Vien
+create proc sp_TimNhanVien(@tennv nvarchar(50))
+as
+select nv.MA_NV , nv.TEN_NV, nv.TAI_KHOAN,nv.TAI_KHOAN,nv.MAT_KHAU,nv.PHAN_QUYEN
+from NHAN_VIEN nv
+where nv.TEN_NV = @tennv or (TRY_CAST(@tennv AS INT) IS NOT NULL AND nv.MA_NV = TRY_CAST(@tennv AS INT))
+
+go
+--Danh Sach Ban
+create proc sp_DanhSachBan
+as
+SELECT * FROM BAN
+go
+--Danh Sach Trang Thai
+create proc sp_DSTrangThai
+as
+SELECT DISTINCT TRANG_THAI FROM BAN
+GO
+--Them Ban
+create proc sp_ThemBan(@soban int,@trangthai nvarchar(50))
+as
+Insert into BAN(SO_BAN,TRANG_THAI)
+values (@soban,@trangthai)
+go
+--Xoa Ban
+create proc sp_XoaBan(@maban int)
+as
+delete from BAN where MA_BAN = @maban
+go
+--Sua Ban
+create proc sp_SuaBan(@maban int, @soban int, @trangthai nvarchar(50))
+as
+update BAN
+set SO_BAN = @soban,
+TRANG_THAI = @trangthai
+where MA_BAN = @maban
+go
+--Tim Ban
+create proc sp_TimBan(@tk int)
+as
+select b.MA_BAN,b.SO_BAN,b.TRANG_THAI
+from BAN b
+where b.SO_BAN = @tk
+
